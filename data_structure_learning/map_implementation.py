@@ -1,14 +1,30 @@
 class Map:
     def __init__(self):
-        self.map = []
+        self.size = 50
+        self.map = [[None, None]] * self.size
+
+    def hash(self, element, size):
+        if type(element) == int:
+            return element % size
+
+        else:
+            i = 0
+            for char in element:
+                i += ord(char)
+                return i % size
 
     def __len__(self):
         return len(self.map)
 
-    def __contains__(self, sublist):
-        if sublist in self.map:
+    def __contains__(self, key):
+        index = key % self.size
+        if key == self.map[index][0]:
             return True
-        return False
+        else:
+            for element in self.map[index+1:]:
+                if key == element[0]:
+                    return True
+            return False
 
     def __eq__(self, other):
         if len(self) == len(other):
@@ -68,3 +84,7 @@ class Map:
 
     def __repr__(self):
         return self.__str__()
+'''        
+    def rehash(self, oldhash, size):
+        return (oldhash = oldhash + 1) % size
+'''

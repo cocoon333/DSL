@@ -7,11 +7,14 @@ class MapTest(unittest.TestCase):
         self.map.add(['lucy', 'sister'])
         self.map.add(['ruoxi', 'awesome'])
         self.map.add(['cici', 'bad'])
+        self.lyst = []
+        for i in xrange(50):
+            self.lyst.append(None)
 
     def test_len(self):
-        self.assertEqual(len(self.map), 3)
+        self.assertEqual(len(self.map), 53)
         self.map.add(['a', 'b'])
-        self.assertEqual(len(self.map), 4)
+        self.assertEqual(len(self.map), 54)
 
     def test_contains(self):
         self.assertTrue(['cici', 'bad'] in self.map)
@@ -35,9 +38,11 @@ class MapTest(unittest.TestCase):
         m = Map()
         m.add(['Conner', 'Best'])
         merge = m + self.map
-        self.assertEqual(merge.map, [['Conner', 'Best'], ['lucy', 'sister'], ['ruoxi', 'awesome'], ['cici', 'bad']])
+        l = [['Conner', 'Best'], ['lucy', 'sister'], ['ruoxi', 'awesome'], ['cici', 'bad']]
+        l.append([[None]]*100)
+        self.assertEqual(merge.map, l)
 
-    def test_clearsub_list(self):
+    def test_clear(self):
         self.map.clear()
         self.assertFalse(self.map.map)
 
@@ -49,14 +54,21 @@ class MapTest(unittest.TestCase):
         self.assertFalse(self.map.has_key('hi'))
 
     def test_items(self):
-        self.assertEqual(self.map.items(), ['sister', 'awesome', 'bad'])
+        self.assertEqual(self.map.items(), ['sister', 'awesome', 'bad'].append(self.lyst))
 
     def test_keys(self):
-        self.assertEqual(self.map.keys(), ['lucy', 'ruoxi', 'cici'])
+        self.assertEqual(self.map.keys(), ['lucy', 'ruoxi', 'cici'].append(self.lyst))
 
     def test_remove(self):
         self.map.remove('cici')
-        self.assertEqual(self.map.items(), ['sister', 'awesome'])
+        l = ['sister', 'awesome']
+        l.append(self.lyst)
+        self.assertEqual(self.map.items(), l)
+
+    def test_hash(self):
+        self.assertEqual(self.map.hash(10, 10), 0)
+        self.assertEqual(self.map.hash(5, 4), 1)
+        self.assertEqual(self.map.hash(2, 9), 2)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,9 +1,10 @@
 class Map:
     def __init__(self):
         self.size = 50
-        self.map = [[None, None]] * self.size
+        self.map = [[] for i in range(50)]
 
     def hash(self, element, size):
+        assert(type(element) == int or type(element) == str)
         if type(element) == int:
             return element % size
 
@@ -11,73 +12,90 @@ class Map:
             i = 0
             for char in element:
                 i += ord(char)
-                return i % size
+            return i % size
 
     def __len__(self):
-        return len(self.map)
+        i = 0
+        for element in self.map:
+            if len(element) != 0:
+                i += 1
+        return i
 
     def __contains__(self, key):
-        index = key % self.size
-        if key == self.map[index][0]:
-            return True
-        else:
-            for element in self.map[index+1:]:
-                if key == element[0]:
-                    return True
-            return False
+        index = self.hash(key, self.size)
+        for l in self.map[index]:
+            assert (len(l) == 2)
+            if key == l[0]:
+                return True
+        return False
 
     def __eq__(self, other):
         if len(self) == len(other):
             for element in self.map:
-                if element in other:
+                try:
+                    if element[0] in other:
+                        pass
+                    else:
+                        return False
+                except:
                     pass
-                else:
-                    return False
             return True
+        return False
 
     def __add__(self, other):
         new_map = Map()
         for element in self.map:
-            new_map.add(element)
+            for l in element:
+                new_map.add(l)
         for element in other.map:
-            new_map.add(element)
+            for l in element:
+                if l[0] not in new_map:
+                    new_map.add(l)
         return new_map
 
     def add(self, sub_list):
-        self.map.append(sub_list)
+        assert(len(sub_list)==2)
+        assert(sub_list[0] != None and sub_list[1] != None)
+        index = self.hash(sub_list[0], self.size)
+        self.map[index].append(sub_list)
 
     def clear(self):
         self.map = []
 
     def get(self, key):
-        for element in self.map:
-            if key in element:
+        index = self.hash(key, self.size)
+        mini_list = self.map[index]
+        for element in mini_list:
+            if element[0] == key:
                 return element[1]
         raise KeyError
 
     def has_key(self, key):
         for element in self.map:
-            if key in element:
-                return True
+            for l in element:
+                if key == l[0]:
+                    return True
         return False
 
     def items(self):
         items = []
         for element in self.map:
-            items.append(element[1])
+            for l in element:
+                items.append(l[1])
         return items
 
     def keys(self):
         keys = []
         for element in self.map:
-            keys.append(element[0])
+            for l in element:
+                keys.append(l[0])
         return keys
 
     def remove(self, key):
         for element in self.map:
-            if element[0] == key:
-                index = self.map.index(element)
-                del self.map[index]
+            for l in element:
+                if l[0] == key:
+                    element.remove(l)
 
     def __str__(self):
         return str(self.map)

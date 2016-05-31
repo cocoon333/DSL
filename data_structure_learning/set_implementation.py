@@ -23,7 +23,7 @@ class Set():
 
     def __eq__(self, other):
         if len(self.set) == len(other):
-            if self.isSubsetOf(other):
+            if self.__lt__(other):
                 return True
         return False
 

@@ -1,5 +1,6 @@
 import unittest
 from map_implementation import Map
+from set_implementation import Set
 
 class MapTest(unittest.TestCase):
     def setUp(self):
@@ -7,18 +8,15 @@ class MapTest(unittest.TestCase):
         self.map.add(['lucy', 'sister'])
         self.map.add(['ruoxi', 'awesome'])
         self.map.add(['cici', 'bad'])
-        self.lyst = []
-        for i in xrange(50):
-            self.lyst.append(None)
 
     def test_len(self):
-        self.assertEqual(len(self.map), 53)
+        self.assertEqual(len(self.map), 3)
         self.map.add(['a', 'b'])
-        self.assertEqual(len(self.map), 54)
+        self.assertEqual(len(self.map), 4)
 
     def test_contains(self):
-        self.assertTrue(['cici', 'bad'] in self.map)
-        self.assertFalse(['a', 'b'] in self.map)
+        self.assertTrue('cici' in self.map)
+        self.assertFalse('a' in self.map)
 
     def test_equal(self):
         compare_map = Map()
@@ -30,17 +28,19 @@ class MapTest(unittest.TestCase):
         self.assertFalse(compare_map == self.map)
 
     def test_add(self):
-        self.assertEqual(self.map.map, [['lucy', 'sister'], ['ruoxi', 'awesome'], ['cici', 'bad']])
+        self.assertFalse('liuruoxi' in self.map)
         self.map.add(['liuruoxi', 'funny'])
-        self.assertNotEqual(self.map.map, [['lucy', 'sister'], ['ruoxi', 'awesome'], ['cici', 'bad']])
+        self.assertTrue('liuruoxi' in self.map)
 
     def test_union(self):
+        self.maxDiff = None
         m = Map()
         m.add(['Conner', 'Best'])
         merge = m + self.map
         l = [['Conner', 'Best'], ['lucy', 'sister'], ['ruoxi', 'awesome'], ['cici', 'bad']]
-        l.append([[None]]*100)
-        self.assertEqual(merge.map, l)
+        for (k, v) in l:
+            self.assertTrue(k in merge)
+            self.assertTrue(merge.get(k) == v)
 
     def test_clear(self):
         self.map.clear()
@@ -54,16 +54,19 @@ class MapTest(unittest.TestCase):
         self.assertFalse(self.map.has_key('hi'))
 
     def test_items(self):
-        self.assertEqual(self.map.items(), ['sister', 'awesome', 'bad'].append(self.lyst))
+        self.assertEqual(self.map.items().sort(), ['sister', 'awesome', 'bad'].sort())
 
     def test_keys(self):
-        self.assertEqual(self.map.keys(), ['lucy', 'ruoxi', 'cici'].append(self.lyst))
+        self.assertEqual(self.map.keys().sort(), ['lucy', 'ruoxi', 'cici'].sort())
 
     def test_remove(self):
         self.map.remove('cici')
         l = ['sister', 'awesome']
-        l.append(self.lyst)
-        self.assertEqual(self.map.items(), l)
+        s1 = Set()
+        s2 = Set()
+        [s1.add(x) for x in l]
+        [s2.add(x) for x in self.map.items()]
+        self.assertEqual(s1, s2)
 
     def test_hash(self):
         self.assertEqual(self.map.hash(10, 10), 0)

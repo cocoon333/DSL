@@ -1,0 +1,13 @@
+My Function                       |    Python's Function
+----------------------------------|----------------------
+add(a list key first value second)|dict[key:value]
+returns nothing                   |returns nothing
+---------------------------------------------------------
+__add__(other map)                |No __add__()
+returns a combination of current  |
+map and other map                 |
+---------------------------------------------------------
+str/repr()                        |returns the dict
+returns the map                   |{key:value, key:value}
+len(varible name)                 |len(v)
+[[key, value], [key, value]]      |

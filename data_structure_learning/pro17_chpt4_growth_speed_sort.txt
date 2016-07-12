@@ -1,0 +1,20 @@
+A scale from 1 to 7
+1 is the slowest growth rate, and 7 is the fastest growth rate
+
+1. log n
+      4
+
+2. 40 log n
+         2
+
+3. k log n
+        2
+
+4. n log n
+        2
+
+5. 5n**2
+
+6. 12n**6
+
+7. 4**n

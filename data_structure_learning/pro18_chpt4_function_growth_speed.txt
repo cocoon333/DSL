@@ -1,0 +1,7 @@
+n**2 + 400n + 5 = O(n**2)
+67n+3n = O(n)
+2n + 5n log n + 100 = O(n log n)
+log n + 2n**2 + 55 = O(n**2)
+3*2**n + n ** 8 + 1024 = O(k**n)
+kn + log k = O(kn)
+9n + k log n + 1000 = O(k log n)

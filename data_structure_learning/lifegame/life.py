@@ -1,3 +1,5 @@
+import copy
+
 class Life(object):
     def __init__(self, num_of_row=10, num_of_column=10):
         self.grid = []
@@ -10,20 +12,23 @@ class Life(object):
             self.num_live_neighbor.append([0]*num_of_column)
             self.next_num_live_neighbor.append([0]*num_of_column)
 
-    def set_live(self, row, col, current=True):
-        grid = self.grid if current else self.next_grid
-        num_live_nb = self.num_live_neighbor if current else self.next_num_live_neighbor
+    def set_next_live(self, row, col):
+        grid = self.next_grid
+        num_live_nb = self.next_num_live_neighbor
         grid[row][col] = 1
-        #for (i, j) in self.neighbors(row, col):
-        #    num_live_nb[i][j] += 1
+        for (i, j) in self.neighbors(row, col):
+            num_live_nb[i][j] += 1
 
-    def set_dead(self, row, col, current=True):
-        grid = self.grid if current else self.next_grid
-        num_live_nb = self.num_live_neighbor if current else self.next_num_live_neighbor
+    def set_next_dead(self, row, col):
+        grid = self.next_grid
         grid[row][col] = 0
         for (i, j) in self.neighbors(row, col):
-            assert num_live_nb[i][j] > 0
-            num_live_nb[i][j] -= 1
+            assert self.next_num_live_neighbor[i][j] > 0
+            self.next_num_live_neighbor[i][j] -= 1
+
+    def sync_next(self):
+        self.grid = copy.deepcopy(self.next_grid)
+        self.num_live_neighbor = copy.deepcopy(self.next_num_live_neighbor)
 
     def neighbors(self, row, col):
         res = []
@@ -38,20 +43,22 @@ class Life(object):
         return res
 
     def step(self):
-        for r in len(self.grid):
-            for c in len(self.grid):
+        is_changed = False
+        for r in xrange(len(self.grid)):
+            for c in xrange(len(self.grid[0])):
                 live = self.grid[r][c]
                 if self.num_live_neighbor[r][c] == 3:
                     live = True
                 elif self.num_live_neighbor[r][c] < 2 or self.num_live_neighbor[r][c] > 3:
                     live = False
                 if live != self.grid[r][c]:
+                    is_changed = True
                     if live:
-                        self.set_live(r, c, False)
+                        self.set_next_live(r, c)
                     else:
-                        self.set_dead(r, c, False)
-        self.grid = self.next_grid
-        self.num_live_neighbor = self.next_num_live_neighbor
+                        self.set_next_dead(r, c)
+        if is_changed:
+            self.sync_next()
 
     def display(self):
         res = "   "

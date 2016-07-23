@@ -27,9 +27,6 @@ class Change(object):
                         solution[0].append(i)
                         if k != 0:
                             return True
-                        else:
-                            assert(k == 0)
-                            self.change_rec(N, solution)
                 j += 1
         if not solution[0]:
             return False

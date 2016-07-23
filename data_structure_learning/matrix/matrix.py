@@ -1,6 +1,9 @@
+import sys
+sys.path.append("../")
+from map_implementation import *
 class SparseMatrix(object):
     def __init__(self, num_row, num_col):
-        self.data = {}
+        self.data = Map()
         assert (type(num_row) is int)
         assert (type(num_col) is int)
         assert (num_row > 0)
@@ -47,10 +50,10 @@ class SparseMatrix(object):
     def __add__(self, m):
         res = SparseMatrix(num_row=self.num_row, num_col=self.num_col)
         assert (type(m) is SparseMatrix)
-        for (k, v) in self.data.items():
-            res[k] = self[k]
         for (k, v) in m.data.items():
-            res[k] = self[k] + m[k]
+            res[k] = m[k] + self[k]
+        for (k, v) in self.data.items():
+            res[k] = m[k] + self[k]
         return res
 
 

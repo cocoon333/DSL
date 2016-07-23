@@ -5,13 +5,21 @@ from set_implementation import Set
 class MapTest(unittest.TestCase):
     def setUp(self):
         self.map = Map()
-        self.map.add(['lucy', 'sister'])
-        self.map.add(['ruoxi', 'awesome'])
-        self.map.add(['cici', 'bad'])
+        self.map['lucy'] = 'sister'
+        self.map['cici'] = 'bad'
+        self.map['ruoxi'] = 'awesome'
+    
+    def test_set_item(self):
+        status = 0
+        for sub_list in self.map.map:
+            for pair in sub_list:
+                if pair == ['lucy', 'sister'] or pair == ['cici', 'bad'] or pair == ['ruoxi', 'awesome']:
+                    status += 1
+        self.assertEqual(status, 3)
 
     def test_len(self):
         self.assertEqual(len(self.map), 3)
-        self.map.add(['a', 'b'])
+        self.map['a'] = 'b'
         self.assertEqual(len(self.map), 4)
 
     def test_contains(self):
@@ -20,38 +28,33 @@ class MapTest(unittest.TestCase):
 
     def test_equal(self):
         compare_map = Map()
-        compare_map.add(['lucy', 'sister'])
-        compare_map.add(['ruoxi', 'awesome'])
-        compare_map.add(['cici', 'bad'])
+        compare_map['lucy'] = 'sister'
+        compare_map['cici'] = 'bad'
+        compare_map['ruoxi'] = 'awesome'
         self.assertTrue(compare_map == self.map)
-        compare_map.add(['s', 'd'])
+        compare_map['s'] = 'd'
         self.assertFalse(compare_map == self.map)
 
     def test_add(self):
         self.assertFalse('liuruoxi' in self.map)
-        self.map.add(['liuruoxi', 'funny'])
+        self.map['liuruoxi'] = 'funny'
         self.assertTrue('liuruoxi' in self.map)
 
     def test_union(self):
-        self.maxDiff = None
         m = Map()
-        m.add(['Conner', 'Best'])
+        m['Conner'] = 'Best'
         merge = m + self.map
         l = [['Conner', 'Best'], ['lucy', 'sister'], ['ruoxi', 'awesome'], ['cici', 'bad']]
         for (k, v) in l:
             self.assertTrue(k in merge)
-            self.assertTrue(merge.get(k) == v)
+            self.assertTrue(merge[k] == v)
 
     def test_clear(self):
         self.map.clear()
-        self.assertFalse(self.map.map)
+        self.assertTrue(len(self.map.map),  50)
 
     def test_get(self):
-        self.assertEqual(self.map.get('cici'), 'bad')
-
-    def test_has_key(self):
-        self.assertTrue(self.map.has_key('cici'))
-        self.assertFalse(self.map.has_key('hi'))
+        self.assertEqual(self.map['cici'], 'bad')
 
     def test_items(self):
         self.assertEqual(self.map.items().sort(), ['sister', 'awesome', 'bad'].sort())
@@ -69,9 +72,9 @@ class MapTest(unittest.TestCase):
         self.assertEqual(s1, s2)
 
     def test_hash(self):
-        self.assertEqual(self.map.hash(10, 10), 0)
-        self.assertEqual(self.map.hash(5, 4), 1)
-        self.assertEqual(self.map.hash(2, 9), 2)
-
+        self.assertEqual(self.map.hash(10), 10)
+        self.assertEqual(self.map.hash(5), 5)
+        self.assertEqual(self.map.hash(2), 2)
+        self.assertEqual(self.map.hash('abc'), 44)
 if __name__ == '__main__':
     unittest.main()

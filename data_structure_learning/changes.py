@@ -1,3 +1,5 @@
+import copy 
+
 class Changes(object):
     def __init__(self, coins):
         assert (type(coins) == list)
@@ -9,21 +11,26 @@ class Changes(object):
     def changes(self, N):
         assert (N > 0)
         solution = []
-        if self.changes_rec(N, solution):
-            assert (solution)
-            assert (sum(solution) == N)
-            return solution
-        else:
-            return None
+        final_solution = []
+        self.changes_rec(N, solution, final_solution)
+        if final_solution[0]:
+            for s in final_solution:
+                assert (sum(s) == N)
+        solution_list = []
+        #FIXME: need use hash to solve the performance problem
+        for s in final_solution:
+            s.sort()
+            if s not in solution_list:
+                solution_list.append(s)
+        return solution_list
 
-    def changes_rec(self, N, solution):
+    def changes_rec(self, N, solution, final_solution):
         assert (N >= 0)
         if N == 0:
-            return True
+            final_solution.append(copy.deepcopy(solution))
         else:
             for i in self.coins:
                 if i <= N:
-                    if (self.changes_rec(N-i, solution)):
-                        solution.append(i)
-                        return True
-        return False
+                    solution.append(i)
+                    self.changes_rec(N-i, solution, final_solution)
+                    solution.pop()

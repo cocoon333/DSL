@@ -2,14 +2,13 @@ import copy
 
 class Changes(object):
     def __init__(self, coins):
-        assert (type(coins) == list)
-        for c in coins:
-            assert (type(c) == int and c > 0)
+        assert(type(coins) == list)
+        for i in coins:
+            assert(type(i) == int and i >= 0)
         self.coins = coins
         self.coins.sort(reverse=True)
 
     def changes(self, N):
-        assert (N > 0)
         solution = []
         final_solution = []
         self.changes_rec(N, solution, final_solution)
@@ -25,7 +24,7 @@ class Changes(object):
         return solution_list
 
     def changes_rec(self, N, solution, final_solution):
-        assert (N >= 0)
+        assert(N >= 0)
         if N == 0:
             final_solution.append(copy.deepcopy(solution))
         else:

@@ -33,3 +33,25 @@ class Changes(object):
                     solution.append(i)
                     self.changes_rec(N-i, solution, final_solution)
                     solution.pop()
+
+class EnumChanges(object):
+    def __init__(self, coins):
+        for i in coins:
+            assert(type(i) == int and i >= 0)
+        self.coins = coins
+        self.coins.sort(reverse=True)
+        self.depth = 0
+        self.layer = []
+
+    def changes(self, N):
+        res = []
+        self.depth = (N-1)/2 + 1
+        self.layer = [0]*self.depth
+        while self.layer[0] <= 3:
+            res.append(copy.deepcopy(solution))
+            self.inc()
+
+    def inc(self):
+        
+
+            

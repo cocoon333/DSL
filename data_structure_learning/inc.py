@@ -19,3 +19,57 @@ class inc(object):
                self.controller_recr(n, carry=1, i=i+1)
             else:
                self.controller_recr(n, i=i+1)
+
+class incrementer(object):
+    def __init__(self):
+        pass
+
+    def vec_to_int(self, v):
+        n = 0
+        v.reverse()
+        for i in xrange(len(v)):
+            n = n + v[i] * 10**i
+        return n
+
+    def to_vec(self, n):
+        '''n: an integer
+           return a list, each element is one digit of n
+           for example, n = 109, return [1, 0, 9]
+        '''
+        assert (n >= 0)
+        v = []
+        while n > 0:
+            d = n % 10
+            v.insert(0, d)
+            n = n / 10
+        if not v:
+            assert (n == 0)
+            v = [0]
+        return v
+
+    def inc(self, n):
+        '''n: an integer
+           return n + 1
+        '''
+        v = self.to_vec(n)
+        (v[-1], carry) = self.add(v[-1], 1)
+        for i in range(len(v)-2, -1, -1):
+            if carry == 0:
+                break
+            (v[i], carry) = self.add(v[i], carry)
+        if carry == 1:
+            v.insert(0, 1)
+        return self.vec_to_int(v)
+
+    def add(self, augend, addend):
+        '''
+           return (sum, carry)
+        '''
+        assert (augend < 10)
+        assert (augend >= 0)
+        assert (addend < 10)
+        assert (addend >= 0)
+        s = augend + addend
+        carry = s / 10
+        s = s % 10
+        return (s, carry)

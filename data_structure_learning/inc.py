@@ -47,29 +47,29 @@ class incrementer(object):
             v = [0]
         return v
 
-    def inc(self, n):
+    def inc(self, n, base_of_number=10):
         '''n: an integer
            return n + 1
         '''
         v = self.to_vec(n)
-        (v[-1], carry) = self.add(v[-1], 1)
+        (v[-1], carry) = self.add(v[-1], 1, base_of_number)
         for i in range(len(v)-2, -1, -1):
             if carry == 0:
                 break
-            (v[i], carry) = self.add(v[i], carry)
+            (v[i], carry) = self.add(v[i], carry, base_of_number)
         if carry == 1:
             v.insert(0, 1)
         return self.vec_to_int(v)
 
-    def add(self, augend, addend):
+    def add(self, augend, addend, base_of_number):
         '''
            return (sum, carry)
         '''
-        assert (augend < 10)
+        assert (augend < base_of_number)
         assert (augend >= 0)
-        assert (addend < 10)
+        assert (addend < base_of_number)
         assert (addend >= 0)
         s = augend + addend
-        carry = s / 10
-        s = s % 10
+        carry = s / base_of_number
+        s = s % base_of_number
         return (s, carry)

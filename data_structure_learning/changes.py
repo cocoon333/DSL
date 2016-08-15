@@ -1,4 +1,5 @@
 import copy 
+from inc import *
 
 class Changes(object):
     def __init__(self, coins):
@@ -45,13 +46,24 @@ class EnumChanges(object):
 
     def changes(self, N):
         res = []
-        self.depth = (N-1)/2 + 1
-        self.layer = [0]*self.depth
-        while self.layer[0] <= 3:
-            res.append(copy.deepcopy(solution))
-            self.inc()
+        combinations = []
+        i = incrementer()
+        l = i.vec_to_int(self.layer)
+        increased = []
 
-    def inc(self):
+        self.depth = (N-1)/2 + 1
+        while len(increased) <= self.depth:
+            increased = i.to_vec(i.inc(l, len(self.coins)))
+            l = i.inc(l, len(self.coins))
+            combinations.append(increased)
         
 
-            
+        for element in combinations:
+            s = 0
+            res.append([])
+            for i in element:
+                res[-1].append(self.coins[i])
+                s += self.coins[i]
+            if s != N:
+                del res[-1]
+        return res

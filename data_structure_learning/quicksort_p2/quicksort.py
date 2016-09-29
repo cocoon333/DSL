@@ -1,27 +1,60 @@
 class Quicksort(object):
-    def quicksort(self, l):
-        self.l = l
+    def __init__(self):
         self.comparsions = 0
-        self.quicksort_helper(l)
-        return l
 
-    def quicksort_helper(self, l):
-        if len(l) <= 1:
-            return 1
-        pivot = l[0]
-        self.partition(l, pivot)
-        self.quicksort_helper(l[:l.index(pivot)+1])
-        self.quicksort_helper(l[l.index(pivot)+1:])
+    def quicksort(self, v):
+        self.comparsions = 0
+        self.quicksort_helper(v, 0, len(v)-1)
+        return self.comparsions
 
-    def partition(self, l, pivot):
-        pivot_index = self.l.index(pivot)
-        self.comparsions += len(l) - 1
-        i = 0
-        for j in xrange(len(l)):
-            if l[j] < pivot:
-                a = l[i+1]
-                self.l[pivot_index+i+1] = l[j]
-                self.l[pivot_index+j] = a
+    def quicksort_helper(self, v, l, h):
+        assert(l <= h)
+        assert(type(v) == list)
+        assert(l < len(v) and l >= 0)
+        assert(h >= 0 and h < len(v))
+        if len(v) > 1:
+            pivot_index = self.partition(v, l, h)
+            if pivot_index != l:
+                self.quicksort_helper(v, l, pivot_index-1)
+            if pivot_index != h:
+                self.quicksort_helper(v, pivot_index+1, h)
+
+    def partition(self, v, l, h):
+        assert(l <= h)
+        assert(type(v) == list)
+        assert(l < len(v) and l >= 0)
+        assert(h >= 0 and h < len(v))
+        pivot = v[l]
+        #pivot = v[h]
+        self.comparsions += h - l
+        i = l
+        for j in xrange(l+1, h+1):
+            if v[j] < pivot:
+                a = v[i+1]
+                v[i+1] = v[j]
+                v[j] = a
                 i += 1
-        self.l[pivot_index] = l[i]
-        self.l[pivot_index+i] = pivot
+        v[l] = v[i]
+        v[i] = pivot
+        assert(i >= l and i <= h)
+       #for j in xrange(l+1, h+1):
+       #    if v[j] < pivot:
+       #        a = v[i+1]
+       #        v[i+1] = v[j]
+       #        v[j] = a
+       #        i += 1
+       #res = 0
+       #if v[l] > pivot:
+       #    a = v[l]
+       #    v[l] = pivot
+       #    v[h] = a
+       #    a = v[i]
+       #    v[i] = pivot
+       #    v[l] = a
+       #    res = i
+       #else:
+       #    v[h] = v[i+1]
+       #    v[i+1] = pivot
+       #    res = i+1
+       #assert(i >= l and i <= h)
+        return res

@@ -1,7 +1,7 @@
 import datetime
 import sys
 
-sys.setrecursionlimit(15000)
+sys.setrecursionlimit(50000)
 
 class SCC(object):
     def __init__(self):

@@ -29,7 +29,14 @@ class SCCTest(unittest.TestCase):
         scc = SCC()
         data = [[1], [2], [0]]
         res = scc.scc(data)
-        self.assertEqual(res, [[1], [2], [0]])
+        self.assertEqual(res, {2: [2, 0, 1]})
+
+    def test_scc_2(self):
+        scc = SCC()
+        data = [[1, 4], [2], [0, 5], [4], [5], [3]]
+        res = scc.scc(data)
+        self.assertEqual(res, {2: [2, 0, 1], 5: [5, 3, 4]})
+
 
 if __name__ == "__main__":
     unittest.main()

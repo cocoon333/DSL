@@ -1,7 +1,7 @@
 import datetime
 import sys
 
-sys.setrecursionlimit(50000)
+sys.setrecursionlimit(800000)
 
 class SCC(object):
     def __init__(self):
@@ -23,8 +23,8 @@ class SCC(object):
         visited_nodes = set()
         for i in range(len(data)-1, -1, -1):
             self.dfs_cl(data, finish_time_map[i], visited_nodes, finish_time_map[i], leader_map)
-            if i % 1000 == 0:
-                print 'datetime.datetime.now()' + "the new leader entry is %s" % str(leader_map[i])
+            if finish_time_map[i] % 1000 == 0:
+                print "%s: " % datetime.datetime.now() + "the new leader entry is %s" % str(finish_time_map[i])
 
         return leader_map
 

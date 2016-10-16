@@ -1,3 +1,7 @@
+import sys
+
+sys.setrecursionlimit(8000000)
+
 class SCC(object):
     def __init__(self):
         self.finishing_time = 0
@@ -12,8 +16,9 @@ class SCC(object):
         for i in xrange(len(data)-1, -1, -1):
             self.dfs_cf(data_r, i, visited_nodes, finishing_time_dictionary)
 
+        visited_nodes = set()
         for i in xrange(len(data)-1, -1, -1):
-            self.dfs_cl(data, finishing_time_dictionary[i], visited_nodes, finishing_time_dictionary[i], leader_map)
+           self.dfs_cl(data, finishing_time_dictionary[i], visited_nodes, finishing_time_dictionary[i], leader_map)
 
         return leader_map
 
@@ -22,9 +27,9 @@ class SCC(object):
         for i in xrange(len(data)):
             data_r.append([])
 
-        for node in data:
-            for connection in node:
-                data_r[connection].append(r)
+        for i in xrange(len(data)):
+            for connection in data[i]:
+                data_r[connection].append(i)
         return data_r
 
     def dfs_cf(self, data, node, visited_nodes, finishing_time_dictionary):

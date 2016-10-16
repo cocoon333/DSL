@@ -2,81 +2,64 @@ import heapq
 
 class Heap(object):
     def __init__(self):
+        self.INVALID_NODE = -1
         self.h = []
-        self.item_set = set()
+        self.node_entry = {} # {node: entry}
 
-    def push(self, item):
-        self.item_set.add(item)
-        heapq.heappush(self.h, item)
+    def push(self, distance, node):
+        entry = [distance, node]
+        self.node_entry[node] = entry
+        heapq.heappush(self.h, entry)
 
     def pop(self):
+        (d, n) = (None, None)
         while True:
-            item= heapq.heappop(self.h)
-            if item in self.item_set:
+            (d, n) = heapq.heappop(self.h)
+            if n != self.INVALID_NODE:
                break
-        self.item_set.remove(item)
-        return item
+        del self.node_entry[n]
+        return (d, n)
 
-    def delete(self, item):
-        assert (item in self.item_set)
-        self.item_set.remove(item)
+    def delete(self, node):
+        assert (node in self.node_entry)
+        entry = self.node_entry[node]
+        entry[1] = self.INVALID_NODE
+        del self.node_entry[node]
+
+    def __len__(self):
+        return len(self.node_entry)
+
+    def __contains__(self, node):
+        return node in self.node_entry
+
+
+    def __getitem__(self, node):
+        assert (node in self.node_entry)
+        return self.node_entry[node]
         
 
 class Dijkstra(object):
-    def __init__(self, data): 
-        self.data = data
-
-    def dijkstra(self):
-        # data: [[connected node1,distance1, connected node2,distance2]] [[1,2, 2,3], [0,2], [0,3]]
+    def __init__(self):
+        self.MAX_DISTANCE = 1000000
+           
+    def dijkstra(self, data):
+        # data: [[connected node1,distance1, connected node2,distance2]] eg. [[1,2, 2,3], [0,2], [0,3]]
         # returns {node1:distance to node1, node2: distance to node2, node3: distance to node3}
-        unvisited_heap = []
-        #  [[distance to 0, node1], [distance to 0, node2]]
-        visited_list = []
-        #  [[distance to 0, node1], [distance to 0, node2]]
-        visited_set = set()
-        entry_finder = {}
+        unvisited_heap = Heap() #  item: [distance to 0, node1]
+        visited_map = {} #  {node1:distance to node1, node2: distance to node2, node3: distance to node3}
 
-        visited_list.append([0, 0])
-        visited_set.add(0)
-        for i in xrange(1, len(self.data)):
-            distance = self.calculate_distance(visited_list, self.data[i])
-            entry = [distance, i]
-            entry_finder[i] = entry
-            heapq.heappush(unvisited_heap, entry)
-        assert(len(unvisited_heap) == len(self.data)-1)
+        unvisited_heap.push(0, 0)
+        for i in range(1, len(data)):
+            unvisited_heap.push(self.MAX_DISTANCE, i)
 
         while len(unvisited_heap) > 0:
-            while True:
-                w = heapq.heappop(unvisited_heap)
-                if w[1] != -1:
-                    break
-                assert (w[1] not in entry_finder)
-            del entry_finder[w[1]]
-            assert (w[0] > 0)
-            assert (w[1] < len(self.data))
-            visited_list.append(w)
-            visited_set.add(w[1])
-            for v in self.data[w[1]][::2]:
-                if v not in visited_set:
-                    assert v in entry_finder
-                    entry_finder[v][-1] = -1
-                    del entry_finder[v]
-                    distance = self.calculate_distance(visited_list, self.data[v])
-                    entry = [distance, v]
-                    heapq.heappush(unvisited_heap, entry)
-                    entry_finder[v] = entry
-        return visited_list
+            (d0w, w) = unvisited_heap.pop()
+            visited_map[w] = d0w
+            for (v, dwv) in zip(data[w][::2], data[w][1::2]):
+                if v in unvisited_heap:
+                    d0v = unvisited_heap[v]
+                    unvisited_heap.delete(v)
+                    d0v = min(d0v[0], d0w+dwv)
+                    unvisited_heap.push(d0v, v)
 
-    def calculate_distance(self, visited_list, edge_list):
-        #  visit_list: [[distance to 0, node1], [distance to 0, node2]]
-        #  edge_list:  [connected node1,distance1, connected node2,distance2]
-        # return distance from 0 to node, 1000000 means no connection
-        possible_distances = []
-        for visited_node in visited_list:
-            if visited_node[1] in node:
-                i = node.index(visited_node[0])
-                possible_distances.append(visited_node[1] + node[i+1])
-        if possible_distances:
-            return min(possible_distances)
-
-        return 1000000
+        return visited_map

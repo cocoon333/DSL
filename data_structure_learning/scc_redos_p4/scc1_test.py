@@ -1,5 +1,5 @@
 import unittest
-from scc2 import *
+from scc3 import *
 
 class SCCTest(unittest.TestCase):
     def test_reverse(self):

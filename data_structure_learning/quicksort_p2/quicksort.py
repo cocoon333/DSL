@@ -37,6 +37,7 @@ class Quicksort(object):
         v[l] = v[i]
         v[i] = pivot
         assert(i >= l and i <= h)
+        return i
        #for j in xrange(l+1, h+1):
        #    if v[j] < pivot:
        #        a = v[i+1]
@@ -57,4 +58,4 @@ class Quicksort(object):
        #    v[i+1] = pivot
        #    res = i+1
        #assert(i >= l and i <= h)
-        return res
+       # return res
